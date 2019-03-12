@@ -9,4 +9,4 @@ let current_compiler = "flake8"
 
 CompilerSet makeprg=flake8
 
-CompilerSet errorformat=%f:%l:%l\ %t%n\ %m
+CompilerSet errorformat=%f:%l:%c:\ %t%n\ %m
