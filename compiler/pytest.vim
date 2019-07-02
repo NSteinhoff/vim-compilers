@@ -10,9 +10,9 @@ let current_compiler = "pytest"
 let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
 if !empty(s:pipfile)
     let $PIPENV_PIPFILE=s:pipfile
-    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q %
+    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q\ %
 else
-    CompilerSet makeprg=pytest\ --tb=short\ -q %
+    CompilerSet makeprg=pytest\ --tb=short\ -q\ %
 endif
 
 CompilerSet errorformat=
