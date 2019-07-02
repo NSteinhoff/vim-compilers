@@ -7,9 +7,10 @@ if exists(":CompilerSet") != 2
 endif
 let current_compiler = "mypy"
 
-let s:pipenv = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p:h')
-if !empty(s:pipenv)
-    execute "lcd" . s:pipenv
+let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
+if !empty(s:pipfile)
+    let $PIPENV_PIPFILE=s:pipfile
+    let $MYPYPATH=fnamemodify(s:pipfile, ':h')
     CompilerSet makeprg=pipenv\ run\ mypy\ --strict\ %
 else
     CompilerSet makeprg=mypy\ --strict\ %

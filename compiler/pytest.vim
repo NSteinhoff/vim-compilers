@@ -7,13 +7,12 @@ if exists(":CompilerSet") != 2
 endif
 let current_compiler = "pytest"
 
-let s:pipenv = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p:h')
-if !empty(s:pipenv)
-    execute "lcd" . s:pipenv
-    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q
+let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
+if !empty(s:pipfile)
+    let $PIPENV_PIPFILE=s:pipfile
+    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q %
 else
-    CompilerSet makeprg=mypy\ --strict\ %
-    CompilerSet makeprg=pytest\ --tb=short\ -q
+    CompilerSet makeprg=pytest\ --tb=short\ -q %
 endif
 
 CompilerSet errorformat=
