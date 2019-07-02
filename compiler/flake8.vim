@@ -10,9 +10,9 @@ let current_compiler = "flake8"
 let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
 if !empty(s:pipfile)
     let $PIPENV_PIPFILE=s:pipfile
-    CompilerSet makeprg=pipenv\ run\ flake8
+    CompilerSet makeprg=pipenv\ run\ flake8 %
 else
-    CompilerSet makeprg=flake8
+    CompilerSet makeprg=flake8 %
 endif
 
 CompilerSet errorformat=%f:%l:%c:\ %t%n\ %m
