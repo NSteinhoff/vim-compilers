@@ -7,7 +7,14 @@ if exists(":CompilerSet") != 2
 endif
 let current_compiler = "pytest"
 
-CompilerSet makeprg=pytest\ --tb=short\ -q
+if !empty(findfile('Pipfile', getcwd() . ';' . expand('~')))
+    echo "Using pipenv " . system("pipenv --venv")
+    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q
+else
+    echo "Using global command"
+    CompilerSet makeprg=mypy\ --strict\ %
+    CompilerSet makeprg=pytest\ --tb=short\ -q
+endif
 
 CompilerSet errorformat=
     \%-G%.%#FF%.%#,
