@@ -7,11 +7,11 @@ if exists(":CompilerSet") != 2
 endif
 let current_compiler = "mypy"
 
-if !empty(findfile('Pipfile', getcwd() . ';' . expand('~')))
-    echo "Using pipenv " . system("pipenv --venv")
+let s:pipenv = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p:h')
+if !empty(s:pipenv)
+    execute "lcd" . s:pipenv
     CompilerSet makeprg=pipenv\ run\ mypy\ --strict\ %
 else
-    echo "Using global command"
     CompilerSet makeprg=mypy\ --strict\ %
 endif
 
