@@ -8,11 +8,20 @@ endif
 let current_compiler = "pytest"
 
 let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
+let s:is_test_file = match(expand('%'), 'test_') != -1
 if !empty(s:pipfile)
     let $PIPENV_PIPFILE=s:pipfile
-    CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q\ %
+    if s:is_test_file
+        CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q\ %
+    else
+        CompilerSet makeprg=pipenv\ run\ pytest\ --tb=short\ -q\ #
+    endif
 else
-    CompilerSet makeprg=pytest\ --tb=short\ -q\ %
+    if s:is_test_file
+        CompilerSet makeprg=pytest\ --tb=short\ -q\ %
+    else
+        CompilerSet makeprg=pytest\ --tb=short\ -q\ #
+    endif
 endif
 
 CompilerSet errorformat=
