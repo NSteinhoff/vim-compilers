@@ -7,14 +7,21 @@ if exists(":CompilerSet") != 2
 endif
 let current_compiler = "mypy"
 
+let s:project_root = fnamemodify(findfile('setup.py', expand('%:p:h') . ';' . expand('~')), ':p:h')
+
+let s:command = ''
+if !empty(s:project_root)
+    let $MYPYPATH=s:project_root . ':' . s:project_root . '/src:' . s:project_root . '/stubs'
+endif
+
 let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
 if !empty(s:pipfile)
-    let s:pipenvroot = fnamemodify(s:pipfile, ':h')
-    let $PIPENV_PIPFILE=s:pipfile
-    let $MYPYPATH=s:pipenvroot . ':' . s:pipenvroot . '/src:' . s:pipenvroot . '/stubs'
-    CompilerSet makeprg=pipenv\ run\ mypy\ --strict\ %
-else
-    CompilerSet makeprg=mypy\ --strict\ %
+    let $PIPENV_PIPFILE = s:pipfile
+    let s:command .= 'pipenv run '
 endif
+
+let s:command .= 'mypy --strict $* %'
+
+exec 'CompilerSet makeprg=' . escape(s:command, ' ')
 
 CompilerSet errorformat=%f:%l:\ %m
