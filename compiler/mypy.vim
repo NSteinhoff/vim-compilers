@@ -31,7 +31,7 @@ endif
 " Add the mypy invocation to the command.
 "
 " Use strict type checking!
-let s:command = s:pipenv.'mypy --strict $* %'
+let s:command = s:pipenv.'mypy $* %'
 
 exec 'CompilerSet makeprg=' . escape(s:command, ' ')
 
