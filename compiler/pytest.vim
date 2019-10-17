@@ -1,29 +1,39 @@
+" Vim Compiler File
+" Compiler:     pytest
+" Maintainer:   Niko Steinhoff <niko.steinhoff@gmail.com>
+" Last Change:  Thu 17 Oct 2019 09:31:16 CEST
+
+" Standard boilerplate {{{
 if exists("current_compiler")
   finish
 endif
+let current_compiler = "pytest"
 
 if exists(":CompilerSet") != 2
   command -nargs=* CompilerSet setlocal <args>
 endif
-let current_compiler = "pytest"
+"}}}
 
-let s:project_root = fnamemodify(findfile('setup.py', expand('%:p:h') . ';' . expand('~')), ':p:h')
-
-let s:command = ''
-if !empty(s:project_root)
-    let s:command .= 'cd ' . s:project_root . ' && '
-endif
-
-let s:pipfile = fnamemodify(findfile('Pipfile', expand('%:p:h') . ';' . expand('~')), ':p')
+" Search the working directory for a pipfile.
+"
+" We want to run mypy from within the project environment
+" when we're in a project that used pipenv to manage its
+" virtualenv.
+"
+" When we find a Pipfile we run mypy through pipenv.
+let s:pipfile = findfile('Pipfile', getcwd())
 if !empty(s:pipfile)
-    let $PIPENV_PIPFILE = s:pipfile
-    let s:command .= 'pipenv run '
+    let s:pipenv = 'pipenv run '
+else
+    let s:pipenv = ''
 endif
 
-let s:command .= 'pytest --tb=short -q $*'
+" Add the mypy invocation to the command.
+"
+" Use strict type checking!
+let s:command = s:pipenv.'pytest --tb=short -q $*'
 
 exec 'CompilerSet makeprg=' . escape(s:command, ' ')
-
 
 CompilerSet errorformat=
     \%-G%.%#FF%.%#,
@@ -35,3 +45,5 @@ CompilerSet errorformat=
     \%ZE\ %#%m,
     \%-G%.%#seconds%.%#,
     \%-G%.%#
+
+" vim: foldmethod=marker
